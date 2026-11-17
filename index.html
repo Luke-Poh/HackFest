@@ -1,0 +1,164 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HOLLOWNET - Help the Hollow survive</title>
+<style>
+:root{--bg:#0b1020;--card:rgba(255,255,255,.055);--fg:#e8ecf6;--mut:#93a0ba;--g:#2fd69a;--a:#ffb23e;--r:#ff5468;--b:#5b8cff;--line:rgba(255,255,255,.1);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--fg);font:16px/1.55 Inter,system-ui,"Segoe UI",sans-serif;padding-bottom:90px;background:radial-gradient(1100px 560px at 8% -10%,#243a8055,transparent),radial-gradient(900px 500px at 100% 0,#0e7a7044,transparent),var(--bg)}
+header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 22px;background:rgba(11,16,32,.75);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:20px;letter-spacing:5px;font-weight:800}.logo{color:var(--g)}header .sub{color:var(--mut);font-size:13px;flex:1;min-width:200px}
+button{background:linear-gradient(135deg,#5b8cff,#7a5bff);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;box-shadow:0 4px 14px #5b8cff33}
+button:hover{transform:translateY(-1px);filter:brightness(1.1)}button:active{transform:none}
+button.alt{background:rgba(255,255,255,.09);color:var(--fg);box-shadow:none}button.red{background:linear-gradient(135deg,#ff5468,#d92f58);box-shadow:0 4px 14px #ff546844}button.grn{background:linear-gradient(135deg,#2fd69a,#16a37a);color:#04261b;box-shadow:0 4px 14px #2fd69a33}
+.badge{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}.on{background:#ffb23e22;color:var(--a)}.off{background:#ff546822;color:var(--r)}.ok{background:#2fd69a22;color:var(--g)}
+nav{display:flex;gap:6px;padding:10px 16px;flex-wrap:wrap;position:sticky;top:0;z-index:5;background:rgba(11,16,32,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav button{background:transparent;color:var(--mut);box-shadow:none}nav button.sel{background:rgba(91,140,255,.18);color:#fff;box-shadow:inset 0 0 0 1px #5b8cff88}
+main{padding:18px;max-width:1120px;margin:auto}.tab{display:none;animation:in .25s}.tab.sel{display:block}@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.card,.welcome,.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;backdrop-filter:blur(8px);box-shadow:0 8px 30px #0004}
+.card h2,.welcome h2{margin:0 0 4px;font-size:18px}.what{color:var(--mut);font-size:14px;margin:0 0 10px}
+.try{background:rgba(91,140,255,.1);border-left:3px solid var(--b);padding:9px 12px;border-radius:8px;margin:10px 0;font-size:14px}
+.welcome{margin-bottom:16px;border-color:#5b8cff77;background:linear-gradient(135deg,rgba(91,140,255,.14),rgba(47,214,154,.07))}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px}.stat{text-align:center;padding:14px;color:var(--mut);font-size:13px}.stat b{display:block;font-size:32px;color:var(--fg);line-height:1.1}
+.map{display:grid;grid-template-columns:62px repeat(5,1fr);gap:5px}.cell{padding:9px 0;border-radius:8px;text-align:center;font-size:12px;font-weight:700;color:#07101f;cursor:pointer;transition:.15s}.cell:hover{transform:scale(1.08)}
+.cell.green{background:var(--g)}.cell.amber{background:var(--a)}.cell.red{background:var(--r);animation:p 1.6s infinite}@keyframes p{50%{box-shadow:0 0 0 6px #ff546833}}
+.lbl{font-size:12px;color:var(--mut);align-self:center}.legend span{margin-right:14px;font-size:13px;color:var(--mut)}.dot{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+select,input[type=text],input[type=number]{padding:8px 10px;background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--line);border-radius:10px;font-size:15px;margin:3px 3px 3px 0;max-width:100%}
+select:focus,input:focus{outline:2px solid #5b8cff88}label.f{display:block;font-size:12px;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.5px}
+ul.l{list-style:none;padding:0;margin:6px 0}ul.l li{padding:7px 0;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:6px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600}
+.res{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:#2fd69a14;border:1px solid #2fd69a44}.res.show{display:block}.res.bad{background:#ff546814;border-color:#ff546855}
+.bar{height:10px;border-radius:6px;background:linear-gradient(90deg,#5b8cff,#2fd69a)}.good{color:var(--g)}.bad{color:var(--r)}.warn{color:var(--a)}
+#tip{position:fixed;left:12px;right:12px;bottom:12px;background:rgba(20,28,52,.95);border:1px solid #5b8cff66;border-radius:14px;backdrop-filter:blur(12px);padding:12px 16px;display:none;gap:10px;align-items:center;flex-wrap:wrap;z-index:9}#tip.show{display:flex}#tip p{margin:0;flex:1;min-width:220px}
+#conn{display:none;background:var(--r);color:#fff;text-align:center;padding:8px;font-weight:600}
+#toast{position:fixed;top:14px;right:14px;max-width:340px;background:#3a1620;border:1px solid var(--r);color:#ffd5db;padding:10px 14px;border-radius:12px;z-index:20;opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s}#toast.show{opacity:1;transform:none}
+
+#botfab{position:fixed;right:18px;bottom:84px;width:66px;height:66px;border-radius:50%;background:rgba(20,28,52,.95);border:2px solid #5b8cff99;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:15;box-shadow:0 8px 28px #5b8cff55;animation:fl 3s ease-in-out infinite;padding:8px}
+@keyframes fl{50%{transform:translateY(-5px)}}
+#botnudge{position:fixed;right:96px;bottom:104px;background:#fff;color:#1d2433;padding:8px 12px;border-radius:12px;font-size:13px;font-weight:600;z-index:15;box-shadow:0 6px 20px #0006;animation:in .4s}
+.av{width:100%;height:100%;display:block}.av svg{width:100%;height:100%}.eyes{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.mouth{transform-box:fill-box;transform-origin:center}.talk .mouth{animation:tk .22s infinite alternate}@keyframes tk{to{transform:scaleY(3)}}
+#botpanel{position:fixed;right:18px;bottom:84px;width:min(390px,calc(100vw - 24px));height:min(560px,calc(100vh - 110px));background:rgba(14,20,40,.97);border:1px solid #5b8cff77;border-radius:20px;display:none;flex-direction:column;z-index:16;box-shadow:0 20px 60px #000a;backdrop-filter:blur(14px);overflow:hidden}#botpanel.show{display:flex;animation:in .25s}
+.bh{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(91,140,255,.2),rgba(47,214,154,.1))}.bh .av{width:42px;height:42px;flex:none}.bh b{display:block}.bh small{color:var(--mut)}.bh button{padding:5px 9px;margin-left:auto}
+#botlog{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.bm{max-width:88%;padding:9px 12px;border-radius:14px;font-size:14px;line-height:1.5;animation:in .25s}.bm.u{align-self:flex-end;background:#5b8cff;color:#fff;border-bottom-right-radius:4px}
+.bm.b{align-self:flex-start;background:rgba(255,255,255,.08);border-bottom-left-radius:4px;display:flex;gap:8px}.mav{width:26px;height:26px;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chips button{padding:5px 10px;font-size:12px;background:rgba(91,140,255,.18);color:#cfe0ff;box-shadow:none}.chips button.go{background:linear-gradient(135deg,#2fd69a,#16a37a);color:#04261b}
+.dots i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mut);margin:0 2px;animation:dt 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}@keyframes dt{50%{transform:translateY(-5px);background:#fff}}
+.bi{display:flex;gap:6px;padding:10px;border-top:1px solid var(--line)}.bi input{flex:1;margin:0}
+</style></head><body>
+<header><h1><span class="logo">◈</span> HOLLOWNET</h1><span class="sub">A control room that helps the people of the Hollow survive.</span><span id="hc" class="badge ok"></span><span id="netst" class="badge"></span><button id="netbtn" class="red" onclick="api('net',{}).then(refresh)"></button></header>
+<div id="conn">⚠️ Lost connection to the server. Is <code>python server.py</code> still running?</div><div id="toast"></div><nav id="nav"></nav>
+<main>
+<section class="tab" id="t-home">
+<div class="welcome" id="welcome"><h2>👋 New here? Start here.</h2>
+<p>Imagine it's the year 2087. Two billion people live underground in a huge network of cities called <b>the Hollow</b>. Things are breaking: power, water, air, medicine. This app is a <b>control room</b> that watches a (simulated) Hollow and helps people deal with each problem.</p>
+<p>The numbers are made up by a simulation that updates every 2 seconds, so you can see the app react live. Each tab above is one area of life underground, and every box says what it does and what you can try.</p>
+<button onclick="tour(0)">▶ Take the 1-minute guided tour</button> <button class="alt" onclick="$('welcome').style.display='none'">Hide this</button></div>
+<div class="stats" id="stats"></div>
+<div class="grid"><div class="card"><h2>🗺️ Map of the Hollow</h2><p class="what">Each square is a neighborhood. Level 1 is near the surface, Level 10 is the deepest. Click a square to see details.</p>
+<div class="legend"><span><i class="dot" style="background:var(--g)"></i>OK</span><span><i class="dot" style="background:var(--a)"></i>Warning</span><span><i class="dot" style="background:var(--r)"></i>Emergency</span></div><br><div id="map" class="map"></div><div class="res show" id="detail">👆 Click any square.</div></div>
+<div class="card"><h2>🚨 What needs attention right now</h2><p class="what">The system spots problems automatically and lists them here, worst first.</p><div id="alerts"></div></div></div></section>
+
+<section class="tab" id="t-power"><div class="grid">
+<div class="card"><h2>⚡ Blackout early warning</h2><p class="what">Blackouts last for days in the deep levels. The system watches how fast power use is climbing and warns people <b>before</b> the lights go out.</p><div id="warn"></div></div>
+<div class="card"><h2>⚖️ Is power shared fairly?</h2><p class="what">Compares what each level <b>needs</b> with what a government that favors the upper levels would give it. Deep levels usually lose.</p><div id="fair"></div></div>
+<div class="card"><h2>🌡️ Where is it too hot?</h2><p class="what">The deep levels get hotter every year. This shows which levels need cooling fans and repair crews the most.</p><div id="cool"></div></div></div></section>
+
+<section class="tab" id="t-water"><div class="grid">
+<div class="card"><h2>💧 Unsafe drinking water</h2><p class="what">Sensors test the water in every neighborhood. If it's contaminated, the tap is locked so no one drinks it.</p><div id="water"></div></div>
+<div class="card"><h2>🚧 Flooded tunnels and safe routes</h2><p class="what">Sewage can flood tunnels and cut off whole neighborhoods. Pick two places and the app finds a path that avoids the flooding.</p><div id="flood"></div>
+<label class="f">Starting from</label><select class="place" id="ra" data-d="L1N1"></select><label class="f">Going to</label><select class="place" id="rb" data-d="L9N5"></select><br><button onclick="route()">Find a safe route</button><div class="res" id="rres"></div></div></div></section>
+
+<section class="tab" id="t-comms"><div class="grid">
+<div class="card"><h2>💬 Messages that work without the government network</h2><p class="what">The Directorate (the government) can shut down the network and read messages. Here, messages can also <b>hop from neighbor to neighbor</b>, like passing a note down a row of people.</p>
+<label class="f">From</label><select class="place" id="ms" data-d="L2N1"></select><label class="f">To</label><select class="place" id="md" data-d="L8N4"></select><label class="f">Message</label><input type="text" id="mt" value="The water on Level 8 is unsafe!" style="width:100%"><br><button onclick="send()">Send message</button><div class="res" id="mres"></div>
+<div class="try">🧪 <b>Try it:</b> send a message, then press the red <b>"Simulate network shutdown"</b> button at the top and send it again.</div><div id="msgs"></div></div>
+<div class="card"><h2>👨‍👩‍👧 Are my family members OK?</h2><p class="what">After a blackout, families on different levels can't reach each other. Tap one button to tell everyone you're safe, or that you need help.</p>
+<label class="f">Your name</label><input type="text" id="cn" value="Alex"><label class="f">Where you are</label><select class="place" id="cnode" data-d="L5N2"></select><br><button class="grn" onclick="chk(true)">✅ I'm safe</button> <button class="red" onclick="chk(false)">🆘 I need help</button><div id="chk"></div></div>
+<div class="card"><h2>🏠 Share space</h2><p class="what">Families are packed into tiny rooms. People with spare floor space can offer it, and people who need space can ask. The app matches the closest ones.</p>
+<label class="f">Where</label><select class="place" id="sn" data-d="L4N3"></select><label class="f">Square meters</label><input type="number" id="sm" value="20" style="width:90px"><br><button class="grn" onclick="sp('offer')">I have space</button> <button class="alt" onclick="sp('request')">I need space</button><div id="space"></div></div></div></section>
+
+<section class="tab" id="t-health"><div class="grid">
+<div class="card"><h2>🫁 The real sickness numbers</h2><p class="what">Lung sickness is spreading, and the government's public numbers look too low. This compares the <b>real</b> cases (reported by residents) with the <b>official</b> ones.</p><div id="out"></div></div>
+<div class="card"><h2>💊 Where should medicine go?</h2><p class="what">Medicine is limited. This splits 1,000 medicine kits across levels, giving more to places where the most cases are being hidden.</p><div id="disp"></div></div>
+<div class="card"><h2>🩺 Check your symptoms</h2><p class="what">The nearest clinic can be levels away. Tick what you feel and get basic advice right away.</p><div id="sy"></div><label class="f">Where you are</label><select class="place" id="cl" data-d="L7N2"></select><br><button onclick="clin()">Check</button><div class="res" id="clres"></div></div>
+<div class="card"><h2>😴 Sleep &amp; mood tracker</h2><p class="what">Living without sunlight affects sleep and mood. Log how you feel, and it suggests light therapy if you need it.</p><label class="f">Where you are</label><select class="place" id="wn" data-d="L7N2"></select><label class="f">Hours slept</label><input type="number" id="ws" value="5" style="width:80px"><label class="f">Mood (1 = awful, 5 = great)</label><input type="number" id="wm" value="2" min="1" max="5" style="width:80px"><br><button onclick="well()">Save today's log</button><div class="res" id="wres"></div></div>
+<div class="card"><h2>🌱 Grow your own food</h2><p class="what">If the main farms cut off a neighborhood, it only has days of food. Enter your space and group size to see how much food you could grow.</p><label class="f">Where</label><select class="place" id="fn" data-d="L9N3"></select><label class="f">Growing space (m²)</label><input type="number" id="fa" value="5000" style="width:100px"><label class="f">People to feed</label><input type="number" id="fp" value="100" style="width:100px"><br><button class="grn" onclick="farm()">Make a plan</button><div class="res" id="fres"></div></div></div></section>
+
+<section class="tab" id="t-surf"><div class="grid">
+<div class="card"><h2>🔒 Is the surface safe? (tamper-proof proof)</h2><p class="what">Sensors on the surface record air quality. Each reading is locked to the one before it, like links in a chain, so nobody (including the Directorate) can secretly change the data without it being noticed.</p><div id="led"></div>
+<div class="try">🧪 <b>Try it:</b> click "Simulate tampering" and watch the chain break. Then "Fix chain" to restore it.</div><button class="red" onclick="api('ledger/tamper',{}).then(refresh)">Simulate tampering</button> <button class="alt" onclick="api('ledger/reset',{}).then(refresh)">Fix chain</button></div>
+<div class="card"><h2>🧑‍🚀 How should people go back up?</h2><p class="what">Going up will happen in stages. This compares three ways to do it and suggests who goes first.</p><div id="asc"></div></div>
+<div class="card"><h2>🌍 How long would moving everyone take?</h2><p class="what">If the surface is safe, millions will want to go up. Enter how many, and see how long it could take.</p><label class="f">People moving up (millions)</label><input type="number" id="mp" value="500" style="width:100px"><br><button onclick="mig()">Simulate</button><div id="migres"></div></div></div></section>
+</main>
+<div id="botnudge">👋 Confused? Ask me anything!</div>
+<div id="botfab" class="av" onclick="botToggle(true)" title="Ask Echo"></div>
+<div id="botpanel"><div class="bh"><span class="av" id="bothead"></span><div><b>Echo · Hollow Guide</b><small id="botmode">Offline guide</small></div><button class="alt" onclick="botClear()">Clear</button><button class="alt" onclick="botToggle(false)">✕</button></div>
+<div id="botlog"></div><div class="bi"><input type="text" id="botin" placeholder="Ask about anything you see…" maxlength="300"><button onclick="botSend()">Send</button></div></div>
+<div id="tip"><p id="tiptxt"></p><button class="alt" onclick="tour(ti-1)">Back</button><button onclick="tour(ti+1)" id="tnext">Next</button><button class="alt" onclick="$('tip').classList.remove('show')">Close</button></div>
+<script>
+const api=(p,b)=>fetch('/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).catch(()=>{throw new Error('Cannot reach the server. Is server.py still running?')}).then(r=>r.json()).then(j=>{if(j.error)throw new Error(j.error);return j});
+const $=i=>document.getElementById(i),v=i=>$(i).value;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const t=$('toast');t.textContent='⚠️ '+m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),4500)}
+window.addEventListener('unhandledrejection',e=>{toast(e.reason&&e.reason.message||'Something went wrong');e.preventDefault()});
+const nm=id=>{const m=/L(\d+)N(\d+)/.exec(id||'');return m?`Level ${m[1]} · Block ${m[2]}`:(id||'?')};
+const tabs=[['home','🏠 Home'],['power','⚡ Power'],['water','💧 Water & Tunnels'],['comms','💬 Stay Connected'],['health','❤️ Health & Food'],['surf','☀️ The Surface']];
+$('nav').innerHTML=tabs.map(t=>`<button id="b-${t[0]}" onclick="show('${t[0]}')">${t[1]}</button>`).join('');
+function show(k){tabs.forEach(t=>{$('t-'+t[0]).classList.toggle('sel',t[0]==k);$('b-'+t[0]).classList.toggle('sel',t[0]==k)});scrollTo(0,0)}show('home');
+document.querySelectorAll('select.place').forEach(s=>{let h='';for(let l=1;l<=10;l++)for(let n=1;n<=5;n++)h+=`<option value="L${l}N${n}">Level ${l} · Block ${n}</option>`;s.innerHTML=h;s.value=s.dataset.d});
+$('sy').innerHTML=[['cough','Cough'],['fever','Fever'],['breathless','Hard to breathe'],['blood','Coughing blood'],['fatigue','Very tired']].map(x=>`<label style="display:block"><input type="checkbox" class="sy" value="${x[0]}"> ${x[1]}</label>`).join('');
+const steps=[['home','This is the map of the Hollow. Green = fine, orange = warning, red = emergency. Click a square to see what is happening there.'],['power','Here the app predicts blackouts before they happen and shows which levels are being treated unfairly.'],['comms','Press "Simulate network shutdown" at the top, then send a message here. It still gets through by hopping between neighbors!'],['health','Compare the real sickness numbers with the ones the government reports. See how much is being hidden.'],['surf','Click "Simulate tampering" to see how fake data gets caught. That is how people could trust the truth about the surface. You are done!']];
+let ti=0;function tour(i){if(i<0)i=0;if(i>=steps.length){$('tip').classList.remove('show');return}ti=i;show(steps[i][0]);$('tiptxt').textContent=`Step ${i+1} of ${steps.length}: `+steps[i][1];$('tnext').textContent=i==steps.length-1?'Finish':'Next';$('tip').classList.add('show')}
+const L=a=>'<ul class="l">'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+const T=(h,r)=>'<table><tr>'+h.map(x=>`<th>${x}</th>`).join('')+'</tr>'+r.map(a=>'<tr>'+a.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('')+'</table>';
+const say=(id,t,bad)=>{const e=$(id);e.innerHTML=t;e.className='res show'+(bad?' bad':'')};
+let S=null;
+function info(id){const n=S.nodes.find(x=>x.id==id);const st={green:'✅ Everything is OK here.',amber:'🟠 Warning: something needs attention.',red:'🔴 Emergency!'}[n.sev];say('detail',`<b>${nm(id)}</b> (${n.pop.toLocaleString()} people)<br>${st}<br>⚡ Power use ${n.power}%${n.black?' (BLACKOUT)':''} · 🌡️ ${n.temp}°C · 💧 Water ${n.unsafe?'<b class=bad>UNSAFE</b>':'safe'} · 🍞 ${n.food} days of food · 🤒 ${n.ill} sick${n.flood?' · 🚧 <b class=bad>Flooded</b>':''}`,n.sev=='red')}
+async function refresh(){let s;try{s=S=await api('state');$('conn').style.display='none'}catch(e){$('conn').style.display='block';return}
+$('hc').textContent=s.health.length?'⚠ self-check: '+s.health.length+' issue(s)':'✔ self-check passed';$('hc').className='badge '+(s.health.length?'off':'ok');if(!botHist.length)$('botmode').textContent=s.ai?'AI mode (Claude)':'Offline guide';
+$('netst').className='badge '+(s.net?'on':'off');$('netst').textContent=s.net?'Government network: ON (messages are monitored)':'Government network: SHUT DOWN';
+$('netbtn').textContent=s.net?'🔌 Simulate network shutdown':'🔁 Restore network';$('netbtn').className=s.net?'red':'grn';
+const c=k=>s.nodes.filter(n=>n.sev==k).length;
+$('stats').innerHTML=`<div class="stat"><b class="good">${c('green')}</b>neighborhoods OK</div><div class="stat"><b class="warn">${c('amber')}</b>warnings</div><div class="stat"><b class="bad">${c('red')}</b>emergencies</div><div class="stat"><b>${s.nodes.filter(n=>n.unsafe).length}</b>unsafe taps</div><div class="stat"><b>${s.nodes.filter(n=>n.flood).length}</b>flooded areas</div>`;
+let m='';for(let l=1;l<=10;l++){m+=`<div class="lbl">Level ${l}</div>`;s.nodes.filter(n=>n.lvl==l).forEach(n=>m+=`<div class="cell ${n.sev}" onclick="info('${n.id}')">B${n.n}</div>`)}$('map').innerHTML=m;
+const ord={red:0,amber:1};$('alerts').innerHTML=s.alerts.length?L(s.alerts.sort((a,b)=>ord[a[0]]-ord[b[0]]).slice(0,12).map(a=>`${a[0]=='red'?'🔴':'🟠'} <b>${nm(a[1])}</b>: ${a[2].replace(/ticks/,'minutes').replace(/\(load/,'(power use')}`)):'✅ Everything looks calm right now.';
+const W=s.nodes.filter(n=>n.warn||n.black).sort((a,b)=>(a.black?-1:b.black?1:a.eta-b.eta));
+$('warn').innerHTML=W.length?L(W.map(n=>n.black?`🔴 <b>${nm(n.id)}</b>: blackout happening now`:`🟠 <b>${nm(n.id)}</b>: blackout expected in about ${n.eta} minutes (power use ${n.power}%)`)):'✅ No blackouts expected right now.';
+$('fair').innerHTML=T(['Level','Should get','Would get','Verdict'],s.fair.map(f=>[f.lvl,f.fair+'%',f.directorate+'%',f.gap>1?'<b class=bad>Short-changed</b>':f.gap<-1?'Over-supplied':'Fair']))+'<p class="what">Percent of the total power supply.</p>';
+$('cool').innerHTML=s.cooling.length?T(['Level','Avg temp','Extra fans needed'],s.cooling.map(x=>[x.lvl,x.temp+'°C',x.fans])):'✅ All levels are at a safe temperature.';
+const U=s.nodes.filter(n=>n.unsafe);$('water').innerHTML=U.length?L(U.map(n=>`🚫 <b>${nm(n.id)}</b>: contaminated (${n.water}). Tap locked.`)):'✅ All taps are safe to drink from.';
+const F=s.nodes.filter(n=>n.flood);$('flood').innerHTML=F.length?L(F.map(n=>`🚧 <b>${nm(n.id)}</b> is flooded. About ${n.food} days of food left.`)):'✅ No flooded tunnels right now.';
+$('msgs').innerHTML=s.msgs.length?'<p class="what">Recent messages:</p>'+L(s.msgs.map(x=>`${nm(x.src)} → ${nm(x.dst)}: ${x.delivered?'✅':'❌'} ${x.via}${x.hops>1?' ('+x.hops+' hops)':''}`)):'';
+const ck=Object.entries(s.checkins);$('chk').innerHTML=ck.length?L(ck.map(([k,x])=>`${x.safe?'✅':'🆘'} <b>${esc(k)}</b> (${nm(x.node)}) at ${x.t}: ${x.safe?'is safe':'needs help'}`)):'<p class="what">No check-ins yet. Be the first!</p>';
+$('space').innerHTML=(s.matches.length?'<p class="what">Matches found:</p>'+L(s.matches.map(x=>`${nm(x.request)} needs ${x.m2} m² ↔ space offered at ${nm(x.offer)}`)):'')+`<p class="what">${s.space.offers.length} offers · ${s.space.requests.length} requests</p>`;
+const hid=s.levels.reduce((a,l)=>a+l.ill-l.off,0);
+$('out').innerHTML=`<p><b class="bad">${hid}</b> cases are missing from the official numbers.</p>`+T(['Level','Real cases','Official','Hidden'],s.levels.map(l=>[l.lvl,l.ill,l.off,`<span class="bad">${l.ill-l.off}</span>`]));
+$('disp').innerHTML=L(s.dispatch.map(d=>`<b>Level ${d.lvl}</b>: send ${d.kits} kits`));
+$('led').innerHTML=(s.ledger_bad<0?'<p class="good"><b>✅ Data is untouched.</b> Every reading checks out.</p>':`<p class="bad"><b>❌ Tampering detected</b> at reading #${s.ledger_bad}. The chain is broken.</p>`)+T(['#','Dust','Oxygen','Lock code'],s.ledger.map(b=>[b.i,b.data.pm25,b.data.o2+'%',b.hash.slice(0,10)+'…']))}
+async function route(){const r=await api(`route?a=${v('ra')}&b=${v('rb')}`);say('rres',r.ok?'✅ Safe route: '+r.path.map(nm).join(' → '):'❌ No safe route. One of these places is flooded or cut off.',!r.ok)}
+async function send(){const r=await api('message',{src:v('ms'),dst:v('md'),text:v('mt')});say('mres',r.delivered?(r.hops>1?`✅ Delivered by hopping through ${r.hops-1} neighborhoods, with no government network needed.`:'✅ Delivered, but through the government network, which can read it.'):'❌ Could not be delivered: '+r.via,!r.delivered);refresh()}
+async function chk(s){await api('checkin',{name:v('cn')||'Someone',node:v('cnode'),safe:s});refresh()}
+async function sp(k){await api('space',{node:v('sn'),m2:v('sm'),kind:k});refresh()}
+async function clin(){const sy=[...document.querySelectorAll('.sy:checked')].map(e=>e.value);const r=await api('clinic',{symptoms:sy,node:v('cl')});say('clres',`<b>${{URGENT:'🔴 See a clinic urgently',"MEDICINE KIT":'🟠 Request a medicine kit','SELF-CARE':'🟢 Rest at home'}[r.triage]}</b><br>${r.advice}`,r.triage=='URGENT')}
+async function well(){const r=await api('wellness',{node:v('wn'),sleep:v('ws'),mood:v('wm')});say('wres',r.light_min?`☀️ Try a ${r.light_min}-minute light therapy session today.`:'👍 You are doing fine. Keep it up.')}
+async function farm(){const r=await api(`farm?node=${v('fn')}&m2=${v('fa')}&people=${v('fp')}`);say('fres',`🌱 Your farm could cover about <b>${r.coverage_pct}%</b> of everyone's daily food.<br>Grow: ${Object.entries(r.produced).map(e=>e[0]).join(', ')}.<br>If cut off, stored food lasts about <b>${r.local_food_days} days</b>.`,r.coverage_pct<50)}
+async function mig(){const r=await api('migrate?pop='+v('mp'));$('migres').innerHTML=`<div class="res show">It would take about <b>${r.years} years</b>.</div>`+r.pct_by_year.map((p,i)=>`<div style="margin-top:4px">Year ${i+1}: ${p}% moved<div class="bar" style="width:${p}%"></div></div>`).join('')}
+api('ascent').then(a=>{$('asc').innerHTML=T(['Option','Score (higher = better)'],a.options.map(o=>[o.option,o.score]))+`<p>🥇 Best choice: <b>${a.options[0].option}</b>.</p><p>First group to go (healthiest neighborhoods): ${a.first_wave.map(nm).join(', ')}.</p>`});
+
+const AV='<svg viewBox="0 0 48 48"><line x1="24" y1="4" x2="24" y2="10" stroke="#2fd69a" stroke-width="2"/><circle cx="24" cy="4" r="2.5" fill="#2fd69a"/><rect x="6" y="10" width="36" height="32" rx="12" fill="#4f8fe8"/><rect x="11" y="17" width="26" height="16" rx="8" fill="#0b1020"/><g class="eyes"><circle cx="19" cy="25" r="3" fill="#fff"/><circle cx="29" cy="25" r="3" fill="#fff"/></g><rect class="mouth" x="21" y="30" width="6" height="1.8" rx="1" fill="#2fd69a"/></svg>';
+$('botfab').innerHTML=AV;$('bothead').innerHTML=AV;setTimeout(()=>{const n=$('botnudge');if(n)n.style.display='none'},9000);
+const botHist=[];let botOpen=false;
+const fmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+function setTalk(on){$('bothead').classList.toggle('talk',on)}
+function botAdd(c,html){const d=document.createElement('div');d.className='bm '+c;d.innerHTML=html;$('botlog').appendChild(d);$('botlog').scrollTop=1e9;return d}
+function botSay(t,chips,tab){let x='';if(tab&&tabs.some(a=>a[0]==tab))x+=`<button class="go" data-go="${esc(tab)}">Take me there →</button>`;(chips||[]).forEach(c=>x+=`<button data-q="${esc(c)}">${esc(c)}</button>`);botAdd('b',`<span class="mav">${AV}</span><div>${fmt(t)}${x?`<div class="chips">${x}</div>`:''}</div>`);setTalk(true);setTimeout(()=>setTalk(false),Math.min(2500,t.length*18))}
+function botToggle(o){botOpen=o;$('botpanel').classList.toggle('show',o);$('botfab').style.display=o?'none':'flex';$('botnudge').style.display='none';if(o){if(!$('botlog').children.length)botIntro();$('botin').focus()}}
+function botIntro(){botSay("Hi, I'm **Echo**, your guide to the Hollow. 👋 Ask me what anything means, or about the live numbers (try 'Level 8 Block 2'). What would you like to know?",['What is this app?',"What's going wrong right now?",'Which level is worst?','Show me a demo'])}
+function botClear(){$('botlog').innerHTML='';botHist.length=0;botIntro()}
+async function botSend(t){t=(t||$('botin').value).trim();if(!t)return;$('botin').value='';document.querySelectorAll('#botlog .chips').forEach(e=>e.remove());botAdd('u',esc(t));botHist.push({role:'user',content:t});
+const ty=botAdd('b','<span class="mav">'+AV+'</span><span class="dots"><i></i><i></i><i></i></span>');setTalk(true);
+try{const r=await api('chat',{message:t,history:botHist.slice(0,-1).slice(-6)});ty.remove();botHist.push({role:'assistant',content:r.reply});$('botmode').textContent=r.mode=='ai'?'AI mode (Claude)':'Offline guide';botSay(r.reply,r.suggestions,r.tab)}catch(e){ty.remove();setTalk(false);botSay(e.message.startsWith('Cannot')?'I lost my connection to the server. Is server.py still running?':e.message)}}
+$('botlog').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.q)botSend(b.dataset.q);if(b.dataset.go){show(b.dataset.go);if(innerWidth<700)botToggle(false)}});
+$('botin').addEventListener('keydown',e=>{if(e.key=='Enter')botSend()});document.addEventListener('keydown',e=>{if(e.key=='Escape'&&botOpen)botToggle(false)});
+refresh();setInterval(()=>{if(!document.hidden)refresh()},2000);
+</script></body></html>
